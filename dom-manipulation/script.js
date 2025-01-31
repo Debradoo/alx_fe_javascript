@@ -6,7 +6,7 @@ Manage an array of quote objects where each quote has a text
  and to add new quotes
  called showRandomQuote and createAddQuoteForm` respectively */
  // Array of quote objects
-const quotes = [
+ const quotes = [
     {text: 'The sky is blue', category: 'Nature'},
     {text: 'The sun sets', category: 'Sky'},
     {text: 'The moon rises', category: 'Sky'},
@@ -23,7 +23,7 @@ const quotes = [
     const quoteCategory = quotes[randomIndex].category;
     // Update the quote display area with the randomly selected quote
     const quoteDisplay =document.getElementById("quoteDisplay");
-    quoteDisplay.textContent = `${quoteText} - ${quoteCategory}`;
+    quoteDisplay.innerHTML = `${quoteText} - ${quoteCategory}`;
 
 }
 
