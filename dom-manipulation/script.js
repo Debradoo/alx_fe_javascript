@@ -6,23 +6,26 @@ Manage an array of quote objects where each quote has a text
  and to add new quotes
  called showRandomQuote and createAddQuoteForm` respectively */
  // Array of quote objects
-const quotes = JSON.parse(localStorage.getItem('quotes')) || []
-
+const quotes = [
+    {text: 'The sky is blue', category: 'Nature'},
+    {text: 'The sun sets', category: 'Sky'},
+    {text: 'The moon rises', category: 'Sky'},
+    {text: 'The earth revolves around the sun', category: 'Nature'},
+    {text: 'The stars twinkle', category: 'Sky'}
+];
 
 // Function to display a random quote
  function showRandomQuote() {
     // Get a random index from the quotes array
     const randomIndex = Math.floor(Math.random() * quotes.length);
     // Get the quote text and category from the random quote object
-    const quoteText = quotes[randomIndex]?.text || "";
-    const quoteCategory = quotes[randomIndex]?.category || "";
+    const quoteText = quotes[randomIndex].text;
+    const quoteCategory = quotes[randomIndex].category;
     // Update the quote display area with the randomly selected quote
     const quoteDisplay =document.getElementById("quoteDisplay");
     quoteDisplay.textContent = `${quoteText} - ${quoteCategory}`;
 
 }
-
-
 
 const btnNewQuote = document.getElementById('newQuote');
 
@@ -46,23 +49,12 @@ const addQuote = function (){
     const newQuote = {text: text, category: category};
     // Add the new quote to the quotes array
     quotes.push(newQuote);
-    window.localStorage.setItem('quotes', JSON.stringify(quotes));
     // Clear the form inputs
     quoteInput.value = '';
     categoryInput.value = '';
     // Display the newly added quote
     showRandomQuote();
 
-
 }
-//function to remove quote
-const removeQuote = function(){
-    console.log('heloo')
-    localStorage.removeItem('quotes');
-   
-}
-
-
-
-
+console.log(quotes);
 
