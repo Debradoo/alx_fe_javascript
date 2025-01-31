@@ -53,6 +53,11 @@ const addQuote = function (){
     quoteInput.value = '';
     categoryInput.value = '';
     // Display the newly added quote
+    // Create new list item dynamically
+    const li = document.createElement('li');
+    li.textContent = `${text} - ${category}`;
+    quoteDisplay.appendChild(li); // Append new quote to the list
+
     showRandomQuote();
 
 }
