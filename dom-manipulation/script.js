@@ -88,6 +88,33 @@ function exportQuotes() {
     a.click();
     document.body.removeChild(a);
 }
+// Filter Quotes Based on Selected Category
+function filterQuotes() {
+    const selectedCategory = categoryFilter.value;
+    localStorage.setItem('selectedCategory', selectedCategory);
+    showRandomQuote();
+}
+
+function getFilteredQuotes() {
+    const selectedCategory = categoryFilter.value;
+    return selectedCategory === 'all' ? quotes : quotes.filter(quote => quote.category === selectedCategory);
+}
+
+// Populate Categories in Dropdown
+function populateCategories() {
+    const categories = [...new Set(quotes.map(quote => quote.category))];
+    categoryFilter.innerHTML = '<option value="all">All Categories</option>';
+    categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        categoryFilter.appendChild(option);
+    });
+
+    const lastSelectedCategory = localStorage.getItem('selectedCategory') || 'all';
+    categoryFilter.value = lastSelectedCategory;
+}
+
 
 // Function to import quotes from a JSON file
 function importFromJsonFile(event) {
