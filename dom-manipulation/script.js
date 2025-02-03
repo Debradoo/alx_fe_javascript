@@ -75,3 +75,61 @@ if (lastQuote) {
 }
 console.log(quotes);
 
+// Function to export quotes as a JSON file
+function exportQuotes() {
+    const dataStr = JSON.stringify(quotes, null, 2);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = "quotes.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+// Function to import quotes from a JSON file
+function importFromJsonFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const fileReader = new FileReader();
+    fileReader.onload = function (event) {
+        try {
+            const importedQuotes = JSON.parse(event.target.result);
+            if (!Array.isArray(importedQuotes)) throw new Error("Invalid JSON format");
+
+            quotes.push(...importedQuotes);
+            saveQuotes();
+            alert("Quotes imported successfully!");
+            displayQuotes(); // Refresh UI
+        } catch (error) {
+            alert("Error importing quotes: " + error.message);
+        }
+    };
+    fileReader.readAsText(file);
+}
+
+// Function to display all quotes in the list
+function displayQuotes() {
+    const quoteList = document.getElementById('quoteList');
+    quoteList.innerHTML = ''; // Clear existing list
+
+    quotes.forEach(quote => {
+        const li = document.createElement('li');
+        li.textContent = `${quote.text} - ${quote.category}`;
+        quoteList.appendChild(li);
+    });
+}
+
+// Attach event listeners
+document.getElementById('newQuote').addEventListener('click', showRandomQuote);
+document.getElementById('addQuote').addEventListener('click', addQuote);
+document.getElementById('exportQuotes').addEventListener('click', exportQuotes);
+document.getElementById('importFile').addEventListener('change', importFromJsonFile);
+
+// Initialize the quote display
+showRandomQuote();
+displayQuotes();
+
