@@ -31,9 +31,17 @@ function addQuote() {
     syncWithServer();
 }
 
-function syncWithServer() {
-    fetch('https://jsonplaceholder.typicode.com/posts')
+function fetchQuotesFromServer() {
+    return fetch('https://jsonplaceholder.typicode.com/posts')
         .then(response => response.json())
+        .catch(error => {
+            console.error('Error fetching quotes from server:', error);
+            return [];
+        });
+}
+
+function syncWithServer() {
+    fetchQuotesFromServer()
         .then(serverQuotes => {
             serverQuotes.forEach(serverQuote => {
                 if (!quotes.some(localQuote => localQuote.text === serverQuote.title)) {
