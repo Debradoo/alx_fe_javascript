@@ -31,27 +31,30 @@ function addQuote() {
     syncWithServer();
 }
 
-function fetchQuotesFromServer() {
-    return fetch('https://jsonplaceholder.typicode.com/posts')
-        .then(response => response.json())
-        .catch(error => {
-            console.error('Error fetching quotes from server:', error);
-            return [];
-        });
+async function fetchQuotesFromServer() {
+    try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching quotes from server:', error);
+        return [];
+    }
 }
 
-function syncWithServer() {
-    fetchQuotesFromServer()
-        .then(serverQuotes => {
-            serverQuotes.forEach(serverQuote => {
-                if (!quotes.some(localQuote => localQuote.text === serverQuote.title)) {
-                    quotes.push({ text: serverQuote.title, category: 'Server' });
-                }
-            });
-            localStorage.setItem('quotes', JSON.stringify(quotes));
-            showNotification('Data synced with server.');
-        })
-        .catch(error => console.error('Sync error:', error));
+async function syncWithServer() {
+    try {
+        const serverQuotes = await fetchQuotesFromServer();
+        serverQuotes.forEach(serverQuote => {
+            if (!quotes.some(localQuote => localQuote.text === serverQuote.title)) {
+                quotes.push({ text: serverQuote.title, category: 'Server' });
+            }
+        });
+        localStorage.setItem('quotes', JSON.stringify(quotes));
+        showNotification('Data synced with server.');
+    } catch (error) {
+        console.error('Sync error:', error);
+    }
 }
 
 function showNotification(message) {
