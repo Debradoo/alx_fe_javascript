@@ -6,14 +6,18 @@ Manage an array of quote objects where each quote has a text
  and to add new quotes
  called showRandomQuote and createAddQuoteForm` respectively */
  // Array of quote objects
- const quotes = [
-    {text: 'The sky is blue', category: 'Nature'},
-    {text: 'The sun sets', category: 'Sky'},
-    {text: 'The moon rises', category: 'Sky'},
-    {text: 'The earth revolves around the sun', category: 'Nature'},
-    {text: 'The stars twinkle', category: 'Sky'}
+ const quotes = JSON.parse(localStorage.getItem('quotes')) || [
+    { text: 'The sky is blue', category: 'Nature' },
+    { text: 'The sun sets', category: 'Sky' },
+    { text: 'The moon rises', category: 'Sky' },
+    { text: 'The earth revolves around the sun', category: 'Nature' },
+    { text: 'The stars twinkle', category: 'Sky' }
 ];
 
+// Function to save quotes to local storage
+function saveQuotes() {
+    localStorage.setItem('quotes', JSON.stringify(quotes));
+}
 // Function to display a random quote
  function showRandomQuote() {
     // Get a random index from the quotes array
@@ -24,8 +28,10 @@ Manage an array of quote objects where each quote has a text
     // Update the quote display area with the randomly selected quote
     const quoteDisplay =document.getElementById("quoteDisplay");
     quoteDisplay.innerHTML = `${quoteText} - ${quoteCategory}`;
-
+    sessionStorage.setItem('lastQuote', JSON.stringify({ text: quoteText, category: quoteCategory }));
 }
+
+
 
 const btnNewQuote = document.getElementById('newQuote');
 
@@ -50,6 +56,7 @@ const addQuote = function (){
     // Add the new quote to the quotes array
     quotes.push(newQuote);
     // Clear the form inputs
+    localStorage.setItem('quotes', JSON.stringify(quotes));
     quoteInput.value = '';
     categoryInput.value = '';
     // Display the newly added quote
@@ -60,6 +67,11 @@ const addQuote = function (){
 
     showRandomQuote();
 
+}
+// Load last quote from session storage
+const lastQuote = JSON.parse(sessionStorage.getItem('lastQuote'));
+if (lastQuote) {
+    alert(`Last viewed quote: "${lastQuote.text}" - ${lastQuote.category}`);
 }
 console.log(quotes);
 
