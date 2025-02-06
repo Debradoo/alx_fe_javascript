@@ -62,13 +62,23 @@ const addQuote = function (){
     categoryInput.value = '';
     // Display the newly added quote
     // Create new list item dynamically
-    const li = document.createElement('li');
-    li.textContent = `${text} - ${category}`;
-    quoteDisplay.appendChild(li); // Append new quote to the list
+    try {
+        const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newQuote),
+        });
 
-    showRandomQuote();
+        if (!response.ok) throw new Error("Failed to sync with server");
 
+        alert("Quote added & synced with server!");
+    } catch (error) {
+        console.error("Error posting quote:", error);
+        alert("Failed to sync with server. Please try again later.");
+    }
 }
+
+
 // Load last quote from session storage
 const lastQuote = JSON.parse(sessionStorage.getItem('lastQuote'));
 if (lastQuote) {
