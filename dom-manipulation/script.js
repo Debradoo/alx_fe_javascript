@@ -175,7 +175,7 @@ async function fetchQuotesFromServer() {
     }
 }
 
-// Handle data sync and resolve conflicts
+// Handle data sync & resolve conflicts
 function handleDataSync(serverQuotes) {
     const localQuotes = JSON.parse(localStorage.getItem("quotes")) || [];
     let conflicts = false;
@@ -196,11 +196,11 @@ function handleDataSync(serverQuotes) {
     }
 }
 
-// Periodically sync quotes every 60 seconds
+// Periodic server sync (every 60 seconds)
 setInterval(fetchQuotesFromServer, 60000);
 
 // Load last quote from session storage
-const lastQuoted = JSON.parse(sessionStorage.getItem("lastQuoted"));
+const lastQuoted = JSON.parse(sessionStorage.getItem("lastQuote"));
 if (lastQuoted) {
     alert(`Last viewed quote: "${lastQuoted.text}" - ${lastQuoted.category}"`);
 }
@@ -209,8 +209,3 @@ if (lastQuoted) {
 showRandomQuote();
 displayQuotes();
 fetchQuotesFromServer();
-
-// Initialize the quote display
-showRandomQuote();
-displayQuotes();
-
