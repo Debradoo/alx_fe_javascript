@@ -219,3 +219,5 @@ if (lastQuoted) {
 showRandomQuote();
 displayQuotes();
 fetchQuotesFromServer();
+
+setInterval(syncQuotes, 300000);
