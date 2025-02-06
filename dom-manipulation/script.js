@@ -62,21 +62,29 @@ const addQuote = function (){
     categoryInput.value = '';
     // Display the newly added quote
     // Create new list item dynamically
+   // Function to sync quotes with server
+async function syncQuotes() {
     try {
-        const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newQuote),
+        const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(quotes)
         });
-
-        if (!response.ok) throw new Error("Failed to sync with server");
-
-        alert("Quote added & synced with server!");
+        if (response.ok) {
+            alert("Quotes synced with server!");
+        } else {
+            alert("Failed to sync quotes with server.");
+        }
     } catch (error) {
-        console.error("Error posting quote:", error);
-        alert("Failed to sync with server. Please try again later.");
+        alert("Error syncing quotes: " + error.message);
     }
 }
+}
+
+// Event listener for syncing quotes
+document.getElementById('syncQuotes').addEventListener('click', syncQuotes);
 
 
 // Load last quote from session storage
