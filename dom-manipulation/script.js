@@ -6,6 +6,7 @@ Manage an array of quote objects where each quote has a text
  and to add new quotes
  called showRandomQuote and createAddQuoteForm` respectively */
  // Array of quote objects
+ const API_URL = "https://jsonplaceholder.typicode.com/posts";
  const quotes = JSON.parse(localStorage.getItem('quotes')) || [
     { text: 'The sky is blue', category: 'Nature' },
     { text: 'The sun sets', category: 'Sky' },
@@ -155,6 +156,59 @@ document.getElementById('newQuote').addEventListener('click', showRandomQuote);
 document.getElementById('addQuote').addEventListener('click', addQuote);
 document.getElementById('exportQuotes').addEventListener('click', exportQuotes);
 document.getElementById('importFile').addEventListener('change', importFromJsonFile);
+
+// Fetch quotes from server
+async function fetchQuotesFromServer() {
+    try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error("Failed to fetch server quotes");
+
+        const serverQuotes = await response.json();
+        const formattedQuotes = serverQuotes.slice(0, 5).map(post => ({
+            text: post.title,
+            category: "General"
+        }));
+
+        handleDataSync(formattedQuotes);
+    } catch (error) {
+        console.error("Error fetching server quotes:", error);
+    }
+}
+
+// Handle data sync and resolve conflicts
+function handleDataSync(serverQuotes) {
+    const localQuotes = JSON.parse(localStorage.getItem("quotes")) || [];
+    let conflicts = false;
+
+    serverQuotes.forEach(serverQuote => {
+        const existsLocally = localQuotes.some(localQuote => localQuote.text === serverQuote.text);
+
+        if (!existsLocally) {
+            quotes.push(serverQuote);
+            conflicts = true;
+        }
+    });
+
+    if (conflicts) {
+        saveQuotes();
+        displayQuotes();
+        alert("New quotes synced from the server!");
+    }
+}
+
+// Periodically sync quotes every 60 seconds
+setInterval(fetchQuotesFromServer, 60000);
+
+// Load last quote from session storage
+const lastQuoted = JSON.parse(sessionStorage.getItem("lastQuoted"));
+if (lastQuoted) {
+    alert(`Last viewed quote: "${lastQuoted.text}" - ${lastQuoted.category}"`);
+}
+
+// Initialize UI
+showRandomQuote();
+displayQuotes();
+fetchQuotesFromServer();
 
 // Initialize the quote display
 showRandomQuote();
